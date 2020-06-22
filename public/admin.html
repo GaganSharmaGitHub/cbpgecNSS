@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to PEU</title>
+<style>
+input{
+    max-width: 500px;
+}  
+  body{
+    min-height: 100vh;
+  }
+</style>
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/7.14.0/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/7.14.0/firebase-auth.js"></script>
+    <script defer src="/__/firebase/7.14.0/firebase-firestore.js"></script>
+    <script defer src="/__/firebase/7.14.0/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/7.14.0/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  </head>
+
+  <body>
+      
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="./index.html">PEU</a>
+    </div>
+    
+              <div class="collapse navbar-collapse" id="myNavbar">
+              <ul class="nav navbar-nav">
+                <li ><a href="./index.html">Home</a></li>
+                <li><a href="./members.html">Members</a></li>
+                <li ><a href="./events.html">Events</a></li>
+                <li class="active"><a href="./adminLogin.html" >Admin</a></li>
+                <li><a href="./clique.html">Cliques</a></li>
+
+                <li class="dropdown">                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" >Social
+                    <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                     <li><a href="https://www.facebook.com/groups/PEUniversity"><i class='fab fa-facebook'></i> Facebook</a></li>
+                     <li><a href="https://discord.gg/tEwMjH4"><i class='fab fa-discord'></i> Discord</a></li>
+                    </ul>
+                  </li>
+              </ul>
+      <button class="btn btn-info navbar-btn" onclick="firebase.auth().signOut()">Log Out</button>
+              
+            </div>
+                   
+            </div>
+          </nav>
+    <section class="main">
+        <h1>
+            Admin dashboard
+        </h1>
+        <div style="width: 100%; min-height: 500px; " class="dashboard">
+            <ul class="nav nav-tabs" >
+                <li class="active"><a data-toggle="tab" href="#home">Daily</a></li>
+                <li><a data-toggle="tab" href="#menu1">Cliques</a></li>
+                <li><a data-toggle="tab" href="#menu3">Users</a></li>
+                <li><a data-toggle="tab" href="#menu2">Gallery</a></li>
+              </ul>
+            
+              <div class="tab-content" style="background-color: rgb(201, 201, 201);">
+                <div id="home" class="tab-pane fade in active">
+                  <h1>Scores</h1>
+                  <button onclick="updateScore()" class="btn btn-primary">Update Score</button>
+                  
+                </div>
+                <div id="menu1" class="tab-pane fade">
+                  <h3>Clique</h3>
+                  <div style="background-color: rgba(31, 30, 30, 0.377); padding: 10px;display: flex; flex-wrap: wrap;">
+                    <div class="form" id="newCliqueForm" style="margin: 50px;">
+                        <h4>New Clique:</h4>
+                        <div  class="form-group">
+                            <label for="cliqueName">Clique Name:</label>
+                            <input type="text" id="cliqueName" class="form-control">
+                          </div>
+                          <div class="form-group">
+                            <label for="cliqueHeadName">Head Name:(use an existing user name)</label>
+                            <input type="text" id="cliqueHeadName" class="form-control">
+                          </div>
+                          <div class="form-group">
+                            <label for="cliqueMascot">Clique Mascot:</label>
+                            <input type="text" id="cliqueMascot" class="form-control">
+                          </div>
+                          <div class="form-group">
+                            <label for="points">points:</label>
+                            <input type="number" value=0 id="pointsNCli" class="form-control" >
+                          </div>
+            
+                          <button type="submit" id="submitEnroll" onclick="createClique()" class="btn btn-primary">Submit</button>
+                    </div>
+                    <div class="form" id="changeCliqueHeadForm" style="margin: 50px;">
+                        <h4>Change Clique Head:</h4>
+                        <div  class="form-group">
+                            <label for="cliqueChangeName">Clique Name:</label>
+                            <input type="text" id="cliqueChangeName" class="form-control">
+                          </div>
+                          <div class="form-group">
+                            <label for="newCliqueHeadName">Head Name:(use an existing user name)</label>
+                            <input type="text" id="newCliqueHeadName" class="form-control">
+                          </div>
+                          <button type="submit" id="submitEnroll" onclick="changeCliqueHead()" class="btn btn-primary">Submit</button>
+                    </div>
+                  </div>
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                  <h3>Gallery</h3>
+                  <p>Coming soon.....</p>
+                </div>
+                <div id="menu3" class="tab-pane fade">
+                    <h3>Users</h3>
+                    <div id="closeUserChange">
+                      <div class="form-group">
+                        <label for="aDuserName">UserName:</label>
+                        <input type="text" id="aDuserName" class="form-control">
+                      </div>
+                      <button onclick="userLookUp()" class="btn btn-primary" >Look  Up</button>
+                    </div>
+                    <div style="display: none;" id="openedUserChange" class="form">
+                        <div class="form-group">
+                          <label for="aDpoints">points:</label>
+                          <input type="number" id="aDpoints" class="form-control" id="pwd">
+                        </div>
+                        <div class="form-group">
+                          <label for="aDpart">partner:</label>
+                          <input type="text" id="aDpart" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                          <label for="aDName">Name:</label>
+                          <input type="text" id="aDName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                          <label for="aDclique">Clique</label>
+                          <input type="text" id="aDclique" class="aDform-control" id="pwd">
+                        </div>
+                        <div class="form-group">
+                          <label for="aDposition">position</label>
+                          <input type="text" value="member" id="aDposition" class="form-control" id="pwd">
+                        </div>
+          
+                        <button type="submit" id="submitEnroll" onclick="updateUser()" class="btn btn-default">Submit</button>
+                  
+
+                        
+                  <h2 style="color: red;">Danger zone:</h2>
+                  <button type="button" onclick="deleteUser()" class="btn btn-danger">Danger</button>
+                  
+                      </div>
+          
+                </div>
+              </div>
+            
+        </div>
+      </section>
+     
+     <br>
+     <br>
+     <br>
+     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+     <style>
+         footer {
+             background-color: #333;
+             padding: 50px;
+             font-size: 80%;
+         }
+         
+         .footer-nav {
+             list-style: none;
+             float: left;
+         }
+         
+         .social-links {
+             list-style: none;
+             float: right;
+         }
+         
+         .footer-nav li,
+         .social-links li {
+             display: inline-block;
+             margin-right: 20px;
+         }
+         
+         .footer-nav li:last-child,
+         .social-links li:last-child {
+             margin-right: 0;
+         }
+         
+         .footer-nav li a:link,
+         .footer-nav li a:visited,
+         .social-links li a:link,
+         .social-links li a:visited {
+             text-decoration: none;
+             border: 0;
+             color: #888;
+             -webkit-transition: color 0.2s;
+             transition: color 0.2s;
+         }
+         
+         .footer-nav li a:hover,
+         .footer-nav li a:active {
+             color: #ddd;
+         }
+         
+         .social-links li a:link,
+         .social-links li a:visited {
+             font-size: 160%;
+         }
+         
+         .fa-facebook:hover {
+             color: #3b5998;
+         }
+         
+         .fa-discord:hover {
+             color: #00aced;
+         }
+         
+         
+         footer p {
+             color: #888;
+             text-align: center;
+             margin-top: 50px;
+         }
+     </style>
+     <footer id="plans">
+         <div class="row">
+             <div class="col span-1-of-2">
+                 <ul class="footer-nav">
+                     <li><a href="./index.html">Home</a></li>
+                     <li><a href="./enroll.html">Enroll</a></li>
+                     <li><a href="./events.html">Events</a></li>
+                 </ul>
+             </div>
+             <div class="col span-1-of-2">
+                 <ul class="social-links">
+                     <li><a href="https://www.facebook.com/groups/PEUniversity"><i class='fab fa-facebook'></i></a></li>
+                     <li><a href="https://discord.gg/tEwMjH4"><i class='fab fa-discord'></i></a></li>
+                 </ul>
+             </div>
+         </div>
+         <div class="row">
+ 
+             <p>
+                 Copyright &copy; 2019 by PEU. All rights reserved.
+             </p>
+         </div>
+     </footer>
+
+</body>
+<script  src="./admin.js"></script>
+</html>
